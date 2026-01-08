@@ -1,6 +1,6 @@
 {
-	"id": "obsidian-infographic",
-	"name": "Infographic",
+	"id": "antv-infographic",
+	"name": "Antv Infographic",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "Render infographic diagrams in Obsidian using @antv/infographic",
