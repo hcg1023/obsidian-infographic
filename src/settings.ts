@@ -1,8 +1,9 @@
-import {App, PluginSettingTab, Setting} from "obsidian";
+import {App, PluginSettingTab, } from "obsidian";
 import InfographicPlugin from "./main";
 
 export interface InfographicSettings {
 	// 可以添加自定义设置选项
+	empty?: boolean
 }
 
 export const DEFAULT_SETTINGS: InfographicSettings = {};
@@ -18,7 +19,5 @@ export class InfographicSettingTab extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
-		containerEl.createEl('h2', {text: 'Infographic 插件设置'});
-		containerEl.createEl('p', {text: '当前版本暂无可配置选项'});
 	}
 }
