@@ -12,12 +12,12 @@ export default class InfographicPlugin extends Plugin {
 		this.addSettingTab(new InfographicSettingTab(this.app, this));
 
 		// 注册 infographic 代码块处理器
-		this.registerMarkdownCodeBlockProcessor('infographic', async (content, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('infographic', (content, el, ctx) => {
 			this.renderInfographic(content, el);
 		});
 
 		// 也支持 {infographic} 语法
-		this.registerMarkdownCodeBlockProcessor('{infographic}', async (content, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('{infographic}', (content, el, ctx) => {
 			this.renderInfographic(content, el);
 		});
 	}
