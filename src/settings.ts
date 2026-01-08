@@ -1,36 +1,24 @@
 import {App, PluginSettingTab, Setting} from "obsidian";
-import MyPlugin from "./main";
+import InfographicPlugin from "./main";
 
-export interface MyPluginSettings {
-	mySetting: string;
+export interface InfographicSettings {
+	// 可以添加自定义设置选项
 }
 
-export const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
-}
+export const DEFAULT_SETTINGS: InfographicSettings = {};
 
-export class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+export class InfographicSettingTab extends PluginSettingTab {
+	plugin: InfographicPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: InfographicPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
 
 	display(): void {
 		const {containerEl} = this;
-
 		containerEl.empty();
-
-		new Setting(containerEl)
-			.setName('Settings #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
-				.onChange(async (value) => {
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
+		containerEl.createEl('h2', {text: 'Infographic 插件设置'});
+		containerEl.createEl('p', {text: '当前版本暂无可配置选项'});
 	}
 }

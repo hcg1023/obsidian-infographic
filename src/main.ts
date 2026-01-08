@@ -1,99 +1,167 @@
-import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab} from "./settings";
+import { Menu, Notice, Plugin } from 'obsidian';
+import { Infographic, InfographicOptions } from '@antv/infographic';
+import { DEFAULT_SETTINGS, InfographicSettings, InfographicSettingTab } from './settings';
 
-// Remember to rename these classes and interfaces!
-
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class InfographicPlugin extends Plugin {
+	settings: InfographicSettings;
 
 	async onload() {
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('dice', 'Sample', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+		// 添加设置选项卡
+		this.addSettingTab(new InfographicSettingTab(this.app, this));
+
+		// 注册 infographic 代码块处理器
+		this.registerMarkdownCodeBlockProcessor('infographic', async (content, el, ctx) => {
+			this.renderInfographic(content, el);
 		});
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status bar text');
-
-		// This adds a simple command that can be triggered anywhere
-		this.addCommand({
-			id: 'open-modal-simple',
-			name: 'Open modal (simple)',
-			callback: () => {
-				new SampleModal(this.app).open();
-			}
+		// 也支持 {infographic} 语法
+		this.registerMarkdownCodeBlockProcessor('{infographic}', async (content, el, ctx) => {
+			this.renderInfographic(content, el);
 		});
-		// This adds an editor command that can perform some operation on the current editor instance
-		this.addCommand({
-			id: 'replace-selected',
-			name: 'Replace selected content',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				editor.replaceSelection('Sample editor command');
-			}
-		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
-		this.addCommand({
-			id: 'open-modal-complex',
-			name: 'Open modal (complex)',
-			checkCallback: (checking: boolean) => {
-				// Conditions to check
-				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
-					if (!checking) {
-						new SampleModal(this.app).open();
-					}
-
-					// This command will only show up in Command Palette when the check function returns true
-					return true;
-				}
-				return false;
-			}
-		});
-
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			new Notice("Click");
-		});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
-
 	}
 
 	onunload() {
+		// 清理工作由 Obsidian 自动处理
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<MyPluginSettings>);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<InfographicSettings>);
 	}
 
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
-}
 
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
+	private renderInfographic(content: string, containerEl: HTMLElement) {
+		// 清空容器
+		containerEl.empty();
+
+		// 创建包装容器元素
+		const wrapper = containerEl.createDiv('infographic-wrapper');
+
+		try {
+			// 创建 Infographic 实例
+			const instance = new Infographic({
+				container: wrapper,
+				...this.settingsToOptions(),
+			});
+
+			// 渲染内容
+			instance.render(content);
+
+			// 在包装容器上添加右键菜单
+			this.registerDomEvent(wrapper, 'contextmenu', (event: MouseEvent) => {
+				event.preventDefault();
+
+				const menu = new Menu();
+
+				// 复制图表到剪贴板
+				menu.addItem((item) =>
+					item
+						.setTitle('复制')
+						.setIcon('copy')
+						.onClick(async () => {
+							try {
+								const dataUrl = await instance.toDataURL();
+								const blob = this.dataUrlToBlob(dataUrl);
+
+								await navigator.clipboard.write([
+									new ClipboardItem({
+										'image/png': blob
+									})
+								]);
+
+								new Notice('图表已复制到剪贴板');
+							} catch (error) {
+								console.error('Copy error:', error);
+								new Notice('复制失败: ' + (error instanceof Error ? error.message : String(error)));
+							}
+						})
+				);
+
+				// 导出为 PNG（默认）
+				menu.addItem((item) =>
+					item
+						.setTitle('导出为 PNG')
+						.setIcon('image-file')
+						.onClick(async () => {
+							try {
+								const dataUrl = await instance.toDataURL();
+
+								// 创建下载链接
+								const link = document.createElement('a');
+								link.href = dataUrl;
+								link.download = `infographic-${Date.now()}.png`;
+								link.click();
+
+								new Notice('图表已导出为 PNG');
+							} catch (error) {
+								console.error('Export error:', error);
+								new Notice('导出失败: ' + (error instanceof Error ? error.message : String(error)));
+							}
+						})
+				);
+
+				// 导出为 SVG
+				menu.addItem((item) =>
+					item
+						.setTitle('导出为 SVG')
+						.setIcon('image-file')
+						.onClick(async () => {
+							try {
+								const dataUrl = await instance.toDataURL({
+									type: 'svg',
+									embedResources: true,
+									removeIds: false
+								});
+
+								// 创建下载链接
+								const link = document.createElement('a');
+								link.href = dataUrl;
+								link.download = `infographic-${Date.now()}.svg`;
+								link.click();
+
+								new Notice('图表已导出为 SVG');
+							} catch (error) {
+								console.error('Export error:', error);
+								new Notice('导出失败: ' + (error instanceof Error ? error.message : String(error)));
+							}
+						})
+				);
+
+				menu.showAtMouseEvent(event);
+			});
+		} catch (error) {
+			// 错误处理
+			console.error('Infographic render error:', error);
+			wrapper.createDiv({
+				cls: 'infographic-error',
+				text: `渲染失败: ${error instanceof Error ? error.message : String(error)}`
+			});
+		}
 	}
 
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
+	// 辅助函数：将 data URL 转换为 Blob
+	private dataUrlToBlob(dataUrl: string): Blob {
+		const arr = dataUrl.split(',');
+		if (arr.length < 2 || !arr[0] || !arr[1]) {
+			throw new Error('Invalid data URL');
+		}
+
+		const mimeMatch = arr[0].match(/:(.*?);/);
+		const mime = mimeMatch?.[1] || 'image/png';
+		const bstr = atob(arr[1]);
+		let n = bstr.length;
+		const u8arr = new Uint8Array(n);
+		while (n--) {
+			u8arr[n] = bstr.charCodeAt(n);
+		}
+		return new Blob([u8arr], { type: mime });
 	}
 
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
+	private settingsToOptions(): Partial<InfographicOptions> {
+		return {}
 	}
 }
