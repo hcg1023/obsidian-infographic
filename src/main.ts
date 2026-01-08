@@ -162,6 +162,13 @@ export default class InfographicPlugin extends Plugin {
 	}
 
 	private settingsToOptions(): Partial<InfographicOptions> {
-		return {}
+		const options: Partial<InfographicOptions> = {};
+
+		// 如果设置了默认主题，则应用
+		if (this.settings.defaultTheme) {
+			options.theme = this.settings.defaultTheme;
+		}
+
+		return options;
 	}
 }

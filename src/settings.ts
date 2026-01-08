@@ -1,12 +1,15 @@
-import {App, PluginSettingTab, } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
+import { getThemes } from '@antv/infographic';
 import InfographicPlugin from "./main";
 
 export interface InfographicSettings {
-	// 可以添加自定义设置选项
-	empty?: boolean
+	// 默认主题
+	defaultTheme?: string;
 }
 
-export const DEFAULT_SETTINGS: InfographicSettings = {};
+export const DEFAULT_SETTINGS: InfographicSettings = {
+	defaultTheme: 'default'
+};
 
 export class InfographicSettingTab extends PluginSettingTab {
 	plugin: InfographicPlugin;
@@ -17,7 +20,21 @@ export class InfographicSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this;
+		const { containerEl } = this;
 		containerEl.empty();
+
+		// 获取可用主题列表
+		const themes = ['default', ...getThemes()];
+
+		new Setting(containerEl)
+			.setName('Default theme')
+			.setDesc('Select the default theme for rendering infographics')
+			.addDropdown(dropdown => dropdown
+				.addOptions(Object.fromEntries(themes.map(theme => [theme, theme])))
+				.setValue(this.plugin.settings.defaultTheme || 'default')
+				.onChange(async (value) => {
+					this.plugin.settings.defaultTheme = value;
+					await this.plugin.saveSettings();
+				}));
 	}
 }

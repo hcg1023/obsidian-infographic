@@ -60,12 +60,6 @@ Right-click on the rendered infographic to access the following options:
 2. **Export as PNG** - Download the infographic as a PNG image file
 3. **Export as SVG** - Download the infographic as an SVG vector file
 
-### Export Options
-
-- **Copy**: Best for quick sharing or pasting into documents
-- **PNG**: Best for saving as files or sharing in bitmap format
-- **SVG**: Best for further editing or large-scale printing
-
 ## Development
 
 ### Prerequisites
