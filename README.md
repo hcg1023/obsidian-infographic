@@ -2,6 +2,49 @@
 
 > Obsidian plugin for rendering infographic diagrams using [@antv/infographic](https://github.com/antvis/Infographic)
 
+[**中文文档**](README.zh.md)
+
+## Installation
+
+> **Note**: This plugin is not yet published in the Obsidian plugin marketplace. Please use one of the following methods to install it manually:
+
+### Method 1: Build from Source (Recommended for Development)
+
+1. Clone the project to your Obsidian plugins directory:
+   ```bash
+   cd ~/.obsidian/plugins
+   git clone https://github.com/hcg1023/obsidian-infographic.git
+   cd obsidian-infographic
+   ```
+
+2. Install dependencies and build:
+   ```bash
+   npm install
+   npm run build
+   ```
+
+3. Enable the plugin in Obsidian settings
+
+### Method 2: Download Source + Pre-built File
+
+1. Download the project source code to `.obsidian/plugins` directory
+2. Download the `main.js` file from the [latest release](https://github.com/hcg1023/obsidian-infographic/releases/latest)
+3. Place `main.js` in `.obsidian/plugins/obsidian-infographic/` directory
+4. Enable the plugin in Obsidian settings
+
+### Method 3: Pre-built Files Only (Simplest)
+
+1. Download the following files from the [latest release](https://github.com/hcg1023/obsidian-infographic/releases/latest):
+   - `main.js`
+   - `manifest.json`
+   - `styles.css`
+
+2. Create `obsidian-infographic` folder in `.obsidian/plugins/` directory (if it doesn't exist)
+
+3. Place the downloaded files in `.obsidian/plugins/obsidian-infographic/` directory
+
+4. Enable the plugin in Obsidian settings
+
 ## Usage
 
 ### Basic Example

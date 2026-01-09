@@ -4,6 +4,10 @@
 	"description": "Render infographic diagrams in Obsidian using @antv/infographic",
 	"main": "main.js",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/hcg1023/obsidian-infographic.git"
+	},
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
