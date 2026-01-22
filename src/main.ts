@@ -15,11 +15,6 @@ export default class InfographicPlugin extends Plugin {
 		this.registerMarkdownCodeBlockProcessor('infographic', (content, el, ctx) => {
 			this.renderInfographic(content, el);
 		});
-
-		// 也支持 {infographic} 语法
-		this.registerMarkdownCodeBlockProcessor('{infographic}', (content, el, ctx) => {
-			this.renderInfographic(content, el);
-		});
 	}
 
 	onunload() {
