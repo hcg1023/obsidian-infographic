@@ -1,7 +1,7 @@
 {
 	"id": "antv-infographic",
 	"name": "Antv Infographic",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
 	"description": "Render infographic diagrams using @antv/infographic.",
 	"author": "hcg1023",

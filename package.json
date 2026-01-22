@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-infographic",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Render infographic diagrams in Obsidian using @antv/infographic",
 	"main": "main.js",
 	"type": "module",
