@@ -8,7 +8,18 @@
 
 > **注意**: 该插件目前尚未被 Obsidian 官方插件商店收录，无法直接从插件商店安装。请使用以下方式之一手动安装：
 
-### 方式一: 从源码构建（推荐用于开发）
+### 方式一：通过 Obsidian BRAT 插件安装（推荐）
+
+1. 确保已安装 [BRAT 插件](https://github.com/TfTHacker/obsidian42-brat)
+2. 在 BRAT 设置中点击 "Add a beta plugin" 按钮，添加本插件的 GitHub 仓库 URL：
+   ```
+   https://github.com/hcg1023/obsidian-infographic
+   ```
+3. 版本选择
+   - 选择 "Latest version" ，或者根据需要安装指定版本
+4. 点击 Add Plugin 按钮 BRAT 会自动下载并安装最新版本的插件
+
+### 方式二: 从源码构建
 
 1. 将项目克隆到 Obsidian 插件目录：
    ```bash
@@ -25,14 +36,14 @@
 
 3. 在 Obsidian 设置中启用该插件
 
-### 方式二: 下载源码 + 预编译文件
+### 方式三: 下载源码 + 预编译文件
 
 1. 下载项目源码到 `.obsidian/plugins` 目录下
 2. 从[最新版本发布页面](https://github.com/hcg1023/obsidian-infographic/releases/latest)下载 `main.js` 文件
 3. 将 `main.js` 放到 `.obsidian/plugins/obsidian-infographic/` 目录下
 4. 在 Obsidian 设置中启用该插件
 
-### 方式三: 仅使用预编译文件（最简单）
+### 方式四: 仅使用预编译文件
 
 1. 从[最新版本发布页面](https://github.com/hcg1023/obsidian-infographic/releases/latest)下载以下文件：
    - `main.js`
